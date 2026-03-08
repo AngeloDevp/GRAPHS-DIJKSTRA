@@ -4,68 +4,41 @@ from LectorDatos import *
 from Visualizador import *
 
 class MetroTravelApp:
+    """
+    Esta clase maneja el estado de la aplicación. 
+    No sabe nada de Tkinter ni de interfaces gráficas.
+    """
     def __init__(self):
-        # Instanciamos TODAS las clases que necesitamos usar
         self.grafo = Grafo()
         self.optimizador = OptimizadorRutas(self.grafo)
-        self.lector = LectorDatos()        # Creamos el objeto lector
-        self.visualizador = Visualizador() # Creamos el objeto visualizador
+        self.lector = LectorDatos()
+        self.visualizador = Visualizador()
 
     def inicializar_datos(self, arch_ciudades, arch_vuelos):
-        # Usamos el objeto lector instanciado
         dict_ciudades = self.lector.cargar_ciudades(arch_ciudades)
         lista_vuelos = self.lector.cargar_vuelos(arch_vuelos)
 
         if not dict_ciudades or not lista_vuelos:
-            print("[!] Sistema iniciado sin datos. Revise los archivos CSV.")
-            return
+            return False # Falló la carga
 
         for ciudad in dict_ciudades.values():
             self.grafo.agregar_ciudad(ciudad)
 
         for origen, destino, precio in lista_vuelos:
             self.grafo.agregar_vuelo(origen, destino, precio)
+            
+        return True # Carga exitosa
 
-    def ejecutar(self):
-        print("="*40)
-        print("  SISTEMA DE RUTAS - METRO TRAVEL")
-        print("="*40)
+    def obtener_lista_ciudades(self):
+        """Retorna una lista formateada para los menús desplegables de la GUI"""
+        opciones = [f"{c.codigo} - {c.nombre}" for c in self.grafo.ciudades.values()]
+        opciones.sort()
+        return opciones
+
+    def procesar_busqueda(self, origen, destino, tiene_visa, modo):
+        """Recibe los datos limpios, llama al algoritmo y retorna el resultado"""
+        return self.optimizador.calcular_ruta_optima(origen, destino, tiene_visa, modo)
         
-        while True:
-            print("\n--- NUEVA CONSULTA ---")
-            origen = input("Ingrese código de ciudad de ORIGEN (ej. CCS) o 'SALIR': ").strip().upper()
-            if origen == 'SALIR':
-                print("¡Gracias por usar Metro Travel!")
-                break
-                
-            destino = input("Ingrese código de ciudad de DESTINO (ej. SXM): ").strip().upper()
-            
-            visa_input = input("¿El pasajero posee VISA vigente? (S/N): ").strip().upper()
-            tiene_visa = True if visa_input == 'S' else False
-
-            print("\nCriterio de optimización:")
-            print("1. Minimizar COSTO del viaje ($)")
-            print("2. Minimizar número de ESCALAS")
-            opcion = input("Seleccione (1 o 2): ").strip()
-            modo = "costo" if opcion == "1" else "escalas"
-
-            ruta, resultado = self.optimizador.calcular_ruta_optima(origen, destino, tiene_visa, modo)
-
-            print("\n" + "="*40)
-            print("RESULTADO DE LA BÚSQUEDA:")
-            print("="*40)
-            
-            if ruta is None:
-                print(f"[!] {resultado}")
-            else:
-                str_ruta = " -> ".join(ruta)
-                print(f"Ruta a seguir: {str_ruta}")
-                
-                if modo == "costo":
-                    print(f"Costo Total: $ {resultado:.2f}")
-                else:
-                    print(f"Número de vuelos: {resultado} (Escalas: {resultado - 1})")
-                
-                # Usamos el objeto visualizador instanciado
-                print("\nGenerando mapa visual...")
-                self.visualizador.dibujar_grafo(self.grafo, ruta)
+    def obtener_figura_mapa(self, ruta=None):
+        """Pide al visualizador que genere el mapa y lo devuelve a la GUI"""
+        return self.visualizador.generar_figura(self.grafo, ruta)

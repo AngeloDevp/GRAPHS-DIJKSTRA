@@ -2,7 +2,6 @@ import csv
 from Ciudad import *   
 
 class LectorDatos:
-    # Ahora es un método de instancia normal, por eso lleva "self"
     def cargar_ciudades(self, ruta_archivo):
         ciudades_leidas = {}
         try:
@@ -15,10 +14,8 @@ class LectorDatos:
                     ciudades_leidas[codigo] = Ciudad(codigo, nombre, req_visa)
             return ciudades_leidas
         except FileNotFoundError:
-            print(f"[!] Error: Archivo {ruta_archivo} no encontrado.")
             return {}
 
-    # Ahora es un método de instancia normal, por eso lleva "self"
     def cargar_vuelos(self, ruta_archivo):
         vuelos_leidos = []
         try:
@@ -31,5 +28,4 @@ class LectorDatos:
                     vuelos_leidos.append((origen, destino, precio))
             return vuelos_leidos
         except FileNotFoundError:
-            print(f"[!] Error: Archivo {ruta_archivo} no encontrado.")
             return []

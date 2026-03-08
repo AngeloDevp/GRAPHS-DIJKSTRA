@@ -1,31 +1,29 @@
+import networkx as nx
+import matplotlib.pyplot as plt
+
 class Visualizador:
-    # Ahora es un método de instancia normal, por eso lleva "self"
-    def dibujar_grafo(self, grafo_obj, ruta_optima=None):
-        try:
-            import networkx as nx
-            import matplotlib.pyplot as plt
+    def generar_figura(self, grafo_obj, ruta_optima=None):
+        """Crea y devuelve un objeto Figure de Matplotlib sin abrir ventanas nuevas"""
+        fig = plt.Figure(figsize=(6, 5), dpi=100)
+        ax = fig.add_subplot(111)
+        ax.set_title("Red de Vuelos - Metro Travel")
 
-            G = nx.Graph()
-            for origen, destinos in grafo_obj.adyacencia.items():
-                for destino, costo in destinos.items():
-                    G.add_edge(origen, destino, weight=costo)
+        G = nx.Graph()
+        for origen, destinos in grafo_obj.adyacencia.items():
+            for destino, costo in destinos.items():
+                G.add_edge(origen, destino, weight=costo)
 
-            pos = nx.spring_layout(G, seed=42)
-            plt.figure(figsize=(10, 6))
+        pos = nx.spring_layout(G, seed=42)
+        
+        # Dibujar grafo base
+        nx.draw(G, pos, ax=ax, with_labels=True, node_color='lightgray', node_size=800, font_size=8, font_weight='bold')
+        labels = nx.get_edge_attributes(G, 'weight')
+        nx.draw_networkx_edge_labels(G, pos, edge_labels=labels, font_size=7, ax=ax)
 
-            nx.draw(G, pos, with_labels=True, node_color='lightgray', node_size=1500, font_weight='bold', font_size=9)
-            
-            labels = nx.get_edge_attributes(G, 'weight')
-            nx.draw_networkx_edge_labels(G, pos, edge_labels=labels, font_size=8)
+        # Resaltar la ruta si existe
+        if ruta_optima:
+            aristas_ruta = [(ruta_optima[i], ruta_optima[i+1]) for i in range(len(ruta_optima)-1)]
+            nx.draw_networkx_nodes(G, pos, nodelist=ruta_optima, node_color='lightblue', node_size=800, ax=ax)
+            nx.draw_networkx_edges(G, pos, edgelist=aristas_ruta, edge_color='blue', width=2.5, ax=ax)
 
-            if ruta_optima:
-                aristas_ruta = [(ruta_optima[i], ruta_optima[i+1]) for i in range(len(ruta_optima)-1)]
-                nx.draw_networkx_nodes(G, pos, nodelist=ruta_optima, node_color='lightblue', node_size=1500)
-                nx.draw_networkx_edges(G, pos, edgelist=aristas_ruta, edge_color='blue', width=3.0)
-
-            plt.title("Red de Vuelos Metro Travel - Ruta Óptima")
-            plt.axis('off')
-            plt.show()
-        except ImportError:
-            print("\n[INFO] Las librerías 'networkx' y/o 'matplotlib' no están instaladas.")
-            print("El cálculo es correcto, pero no se mostrará la interfaz gráfica.")
+        return fig
