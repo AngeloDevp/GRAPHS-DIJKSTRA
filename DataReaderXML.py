@@ -12,7 +12,7 @@ class DataReaderXML(DataReader):
             code = item.find('code').text
             name = item.find('name').text
             # Manejamos el texto para evitar errores por espacios o mayúsculas
-            requiresVisa = True if item.find('requieresVisa').text.strip().lower() == 'si' else False
+            requiresVisa = True if item.find('requiresVisa').text.strip().lower() == 'si' else False
             cities[code] = City(code, name, requiresVisa)
             
         return cities
