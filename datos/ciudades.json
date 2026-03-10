@@ -1,14 +1,14 @@
 [
-  {"codigo": "CCS", "nombre": "Caracas", "requiere_visa": "no"},
-  {"codigo": "AUA", "nombre": "Aruba", "requiere_visa": "si"},
-  {"codigo": "BON", "nombre": "Bonaire", "requiere_visa": "si"},
-  {"codigo": "CUR", "nombre": "Curazao", "requiere_visa": "si"},
-  {"codigo": "SXM", "nombre": "San Martín", "requiere_visa": "si"},
-  {"codigo": "SDQ", "nombre": "Santo Domingo", "requiere_visa": "si"},
-  {"codigo": "SBH", "nombre": "San Bartolomé", "requiere_visa": "no"},
-  {"codigo": "POS", "nombre": "Puerto España (Trinidad)", "requiere_visa": "no"},
-  {"codigo": "BGI", "nombre": "Barbados", "requiere_visa": "no"},
-  {"codigo": "FDF", "nombre": "Fort de France (Martinica)", "requiere_visa": "no"},
-  {"codigo": "PTP", "nombre": "Point a Pitre (Guadalupe)", "requiere_visa": "no"},
-  {"codigo": "PAP", "nombre": "Port Au Prince (Haití)", "requiere_visa": "no"}
+  {"code": "CCS", "name": "Caracas", "requiresVisa": "no"},
+  {"code": "AUA", "name": "Aruba", "requiresVisa": "si"},
+  {"code": "BON", "name": "Bonaire", "requiresVisa": "si"},
+  {"code": "CUR", "name": "Curazao", "requiresVisa": "si"},
+  {"code": "SXM", "name": "San Martín", "requiresVisa": "si"},
+  {"code": "SDQ", "name": "Santo Domingo", "requiresVisa": "si"},
+  {"code": "SBH", "name": "San Bartolomé", "requiresVisa": "no"},
+  {"code": "POS", "name": "Puerto España (Trinidad)", "requiresVisa": "no"},
+  {"code": "BGI", "name": "Barbados", "requiresVisa": "no"},
+  {"code": "FDF", "name": "Fort de France (Martinica)", "requiresVisa": "no"},
+  {"code": "PTP", "name": "Point a Pitre (Guadalupe)", "requiresVisa": "no"},
+  {"code": "PAP", "name": "Port Au Prince (Haití)", "requiresVisa": "no"}
 ]

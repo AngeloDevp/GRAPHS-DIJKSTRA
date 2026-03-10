@@ -1,4 +1,4 @@
-codigo,nombre,requiere_visa
+code,name,requiresVisa
 CCS,Caracas,No
 AUA,Aruba,Si
 BON,Bonaire,Si
