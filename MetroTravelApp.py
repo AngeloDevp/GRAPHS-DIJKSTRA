@@ -1,10 +1,10 @@
 from FileManager import *
 from Graph import *
-from RouteStrategy import *
-from RouteStrategyLCS import *
-from RouteStrategyLSS import *
-from GraphViewer import *
-from RouteOptimizer import *
+from Strategies.RouteStrategy import *
+from Strategies.RouteStrategyLCS import *
+from Strategies.RouteStrategyLSS import *
+from GUI.GraphViewer import *
+from Strategies.RouteOptimizer import *
 
 class MetroTravelApp:
     """Controlador Principal de la Aplicación"""

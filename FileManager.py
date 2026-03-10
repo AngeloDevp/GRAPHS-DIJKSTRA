@@ -1,6 +1,6 @@
-from DataReaderCSV import *
-from DataReaderJSON import *   
-from DataReaderXML import *
+from Readers.DataReaderCSV import *
+from Readers.DataReaderJSON import *   
+from Readers.DataReaderXML import *
 
 class FileManager:
     def GetReader(self, pathFile):

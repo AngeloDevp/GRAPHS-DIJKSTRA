@@ -2,7 +2,7 @@ from MetroTravelApp import *
 from MetroTravelGUI import *
 import tkinter as tk
 
-from folderTest.MetroTravelGUI2 import MetroTravelGUI2
+from GUI.MetroTravelGUI2 import MetroTravelGUI2
 
 class Main:
     def run(self):
