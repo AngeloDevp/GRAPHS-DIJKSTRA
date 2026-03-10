@@ -63,7 +63,7 @@ class MetroTravelGUI:
         # --- SELECCIÓN DE ESTRATEGIA (Patrón Strategy) ---
         tk.Label(leftPanel, text="Estrategia (Minimizar):", font=("Arial", 9, "bold")).pack(anchor=tk.W)
         tk.Radiobutton(leftPanel, text="Costo ($)", variable=self.criteria, value="cost").pack(anchor=tk.W)
-        tk.Radiobutton(leftPanel, text="Escalas", variable=self.criteria, value="escalas").pack(anchor=tk.W, pady=(0, 15))
+        tk.Radiobutton(leftPanel, text="Escalas", variable=self.criteria, value="scale").pack(anchor=tk.W, pady=(0, 15))
 
         self.runBtn = tk.Button(leftPanel, text="▶ Calcular path", command=self.ExecuteSearch, bg="#0052cc", fg="white", font=("Arial", 10, "bold"), state=tk.DISABLED)
         self.runBtn.pack(fill=tk.X)
