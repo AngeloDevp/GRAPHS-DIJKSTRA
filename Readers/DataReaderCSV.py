@@ -1,4 +1,4 @@
-from DataReader import *
+from Readers.DataReader import *
 
 class DataReaderCSV(DataReader):
     def LoadCities(self, pathFile):
@@ -7,7 +7,8 @@ class DataReaderCSV(DataReader):
             reader = csv.DictReader(file)
             for fila in reader:
                 requiresVisa = True if fila['requiresVisa'].strip().lower() == 'si' else False
-                cities[fila['code']] = City(fila['code'], fila['name'], requiresVisa)
+                if fila['code'] not in cities:
+                    cities[fila['code']] = City(fila['code'], fila['name'], requiresVisa)
         return cities
 
     def LoadFlights(self, pathFile):
@@ -15,6 +16,10 @@ class DataReaderCSV(DataReader):
         with open(pathFile, mode='r', encoding='utf-8') as file:
             reader = csv.DictReader(file)
             for fila in reader:
-                flights.append((fila['origin'].strip().upper(), fila['destination'].strip().upper(), float(fila['price'])))
-    
+                origin = fila['origin'].strip().upper()
+                destination = fila['destination'].strip().upper()
+                price = float(fila['price'])
+                if (origin, destination, price) not in flights:  
+                    flights.append((origin, destination, price))
+                
         return flights

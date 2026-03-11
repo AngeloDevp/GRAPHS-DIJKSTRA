@@ -1,5 +1,4 @@
 class RouteOptimizer:
-    """Contexto del Patrón Strategy"""
     def __init__(self):
         self.currentStrategy = None
 
@@ -8,12 +7,11 @@ class RouteOptimizer:
 
     def ExecuteOptimization(self, graphObj, origin, destination, requiresVisa):
         if not self.currentStrategy:
-            return None, "Error: No se ha definido una strategy de optimización."
+            return None, "Error: No se ha definido una estrategia de optimización."
         
-        # Validación de reglas de negocio globales
         if origin not in graphObj.adjacency or destination not in graphObj.adjacency:
-            return None, "Origin o destination inválidos."
+            return None, "Origen o destino inválidos."
         if graphObj.cities[origin].requiresVisa and not requiresVisa:
-            return None, "No puede iniciar el viaje: no tiene visa para el origin."
+            return None, "No puede iniciar el viaje: no tiene visa para el origen."
             
         return self.currentStrategy.RouteCalculator(graphObj, origin, destination, requiresVisa)

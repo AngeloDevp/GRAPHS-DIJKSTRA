@@ -1,4 +1,5 @@
 import csv
+
 class City:
     def __init__(self, code, name, requiresVisa):
         self.code = code.strip().upper()

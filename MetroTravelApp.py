@@ -7,7 +7,6 @@ from GUI.GraphViewer import *
 from Strategies.RouteOptimizer import *
 
 class MetroTravelApp:
-    """Controlador Principal de la Aplicación"""
     def __init__(self):
         self.graph = Graph()
         self.fileManager = FileManager()
@@ -27,7 +26,7 @@ class MetroTravelApp:
             self.loadedCities = True
 
             self.loadedFlights = False # Si recarga cities, debe recargar vuelos
-            return True, f"{len(dictCities)} cities cargadas."
+            return True, f"{len(dictCities)} Ciudades cargadas."
         except Exception as e:
             return False, str(e)
 
@@ -49,7 +48,6 @@ class MetroTravelApp:
         return options
 
     def ProcessSearch(self, origin, destination, requiresVisa, criteria):
-        # Asignar la Estrategia dinámicamente según el criteria del usuario
         if criteria == "cost":
             self.routeOptimizer.SetStrategy(RouteStrategyLCS())
         elif criteria == "scale":

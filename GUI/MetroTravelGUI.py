@@ -1,9 +1,9 @@
 import tkinter as tk
-from folderTest.StyleConfig import StyleConfig
-from folderTest.MapViewer import MapViewer
-from folderTest.SearchPanel import SearchPanel
+from GUI.StyleConfig import StyleConfig
+from GUI.MapViewer import MapViewer
+from GUI.SearchPanel import SearchPanel
 
-class MetroTravelGUI2:
+class MetroTravelGUI:
     def __init__(self, root, app):
         """
         Orquestador principal de la Interfaz Gráfica.
