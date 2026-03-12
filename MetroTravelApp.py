@@ -56,4 +56,4 @@ class MetroTravelApp:
         return self.routeOptimizer.ExecuteOptimization(self.graph, origin, destination, requiresVisa)
 
     def GetGraphMap(self, path=None):
-        return self.graphViewer.CreateGraph(self.graph, path)
+        return self.graphViewer.CreateGraph(self.graph, self.graph.cities, path)

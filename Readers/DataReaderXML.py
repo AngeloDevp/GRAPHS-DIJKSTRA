@@ -1,6 +1,9 @@
 from Readers.DataReader import *
 
 class DataReaderXML(DataReader):
+    def __init__(self):
+        super().__init__()
+
     def LoadCities(self, pathFile):
         cities = {}
         tree = ET.parse(pathFile)
@@ -11,7 +14,8 @@ class DataReaderXML(DataReader):
             name = item.find('name').text
             requiresVisa = True if item.find('requiresVisa').text.strip().lower() == 'si' else False
             if code not in cities:
-                cities[code] = City(code, name, requiresVisa)
+                coords = self.geoLocatorCache.get_coordinates(code, name)
+                cities[code] = City(code, name, requiresVisa, coords)
             
         return cities
 

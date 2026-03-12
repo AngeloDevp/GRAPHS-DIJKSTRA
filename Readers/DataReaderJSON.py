@@ -1,6 +1,9 @@
 from Readers.DataReader import *
 
 class DataReaderJSON(DataReader):
+    def __init__(self):
+        super().__init__()
+
     def LoadCities(self, pathFile):
             cities = {}
             with open(pathFile, mode='r', encoding='utf-8') as file:
@@ -8,7 +11,8 @@ class DataReaderJSON(DataReader):
                 for item in data:
                     requiresVisa = True if item['requiresVisa'].strip().lower() == 'si' else False
                     if item['code'] not in cities:
-                        cities[item['code']] = City(item['code'], item['name'], requiresVisa)
+                        coords = self.geoLocatorCache.get_coordinates(item['code'], item['name'])
+                        cities[item['code']] = City(item['code'], item['name'], requiresVisa, coords)
             return cities
 
     def LoadFlights(self, pathFile):

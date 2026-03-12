@@ -1,6 +1,9 @@
 from Readers.DataReader import *
 
 class DataReaderCSV(DataReader):
+    def __init__(self):
+        super().__init__()
+        
     def LoadCities(self, pathFile):
         cities = {}
         with open(pathFile, mode='r', encoding='utf-8') as file:
@@ -8,7 +11,8 @@ class DataReaderCSV(DataReader):
             for fila in reader:
                 requiresVisa = True if fila['requiresVisa'].strip().lower() == 'si' else False
                 if fila['code'] not in cities:
-                    cities[fila['code']] = City(fila['code'], fila['name'], requiresVisa)
+                    coords = self.geoLocatorCache.get_coordinates(fila['code'], fila['name'])
+                    cities[fila['code']] = City(fila['code'], fila['name'], requiresVisa, coords)
         return cities
 
     def LoadFlights(self, pathFile):
