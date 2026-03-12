@@ -5,11 +5,6 @@ from GUI.SearchPanel import SearchPanel
 
 class MetroTravelGUI:
     def __init__(self, root, app):
-        """
-        Orquestador principal de la Interfaz Gráfica.
-        :param root: La ventana principal de Tkinter (tk.Tk()).
-        :param app: El controlador de la aplicación con la lógica de negocio.
-        """
         self.root = root
         self.app = app
         

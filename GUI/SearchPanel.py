@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import ttk, filedialog, messagebox
+from GUI.CRUDForms import CRUDForms
 
 class SearchPanel:
     def __init__(self, parent, app, map_viewer):
@@ -10,6 +11,7 @@ class SearchPanel:
         """
         self.app = app
         self.map_viewer = map_viewer  # Guardamos la referencia al mapa
+        self.parent = parent # Guardamos el parent para las ventanas emergentes
         
         # Variables de estado de la UI
         self.origin = tk.StringVar()
@@ -19,6 +21,7 @@ class SearchPanel:
         
         # Crear el contenedor visual (Panel Izquierdo)
         self.panel = tk.Frame(parent, width=320, padx=20, pady=20)
+        self.panel.pack_propagate(False)
         self.panel.pack(side=tk.LEFT, fill=tk.Y)
         
         # Construir los botones y formularios
@@ -26,7 +29,7 @@ class SearchPanel:
 
     def CreateWidgets(self):
         # --- SECCIÓN 1: CARGA DE ARCHIVOS ---
-        tk.Label(self.panel, text="1. Cargar Datos", font=("Arial", 12, "bold"), fg="navy").pack(anchor=tk.W, pady=(0, 10))
+        tk.Label(self.panel, text="1. Cargar Datos", font=("Arial", 12, "bold"), fg="navy").pack(anchor=tk.W, pady=(0, 5))
         
         self.citiesBtn = tk.Button(self.panel, text="📁 Cargar Ciudades", command=self.LoadCities)
         self.citiesBtn.pack(fill=tk.X, pady=5)
@@ -41,7 +44,7 @@ class SearchPanel:
         tk.Frame(self.panel, height=2, bd=1, relief=tk.SUNKEN).pack(fill=tk.X, pady=10)
 
         # --- SECCIÓN 2: BÚSQUEDA ---
-        tk.Label(self.panel, text="2. Buscar Ruta Óptima", font=("Arial", 12, "bold"), fg="navy").pack(anchor=tk.W, pady=(0, 10))
+        tk.Label(self.panel, text="2. Buscar Ruta Óptima", font=("Arial", 12, "bold"), fg="navy").pack(anchor=tk.W, pady=(0, 5))
 
         tk.Label(self.panel, text="Origen:", font=("Arial", 9, "bold")).pack(anchor=tk.W)
         self.originComboBox = ttk.Combobox(self.panel, textvariable=self.origin, state="disabled")
@@ -63,8 +66,70 @@ class SearchPanel:
         self.runBtn = tk.Button(self.panel, text="▶ Calcular Ruta", command=self.ExecuteSearch, bg="#0052cc", fg="white", font=("Arial", 10, "bold"), state=tk.DISABLED)
         self.runBtn.pack(fill=tk.X)
 
-        self.labelResult = tk.Label(self.panel, text="", font=("Arial", 10), justify=tk.LEFT, wraplength=260)
-        self.labelResult.pack(anchor=tk.W, pady=15)
+        self.resultFrame = tk.Frame(self.panel)
+        self.resultFrame.pack(fill=tk.X, pady=10)
+
+        self.scrollbar = tk.Scrollbar(self.resultFrame)
+        self.scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
+
+        self.textResult = tk.Text(self.resultFrame, height=4, width=30, font=("Arial", 10), 
+                                  yscrollcommand=self.scrollbar.set, bg=self.panel.cget("bg"), relief=tk.FLAT)
+        self.textResult.pack(side=tk.LEFT, fill=tk.X, expand=True)
+        self.scrollbar.config(command=self.textResult.yview)
+
+        self.textResult.tag_config("error", foreground="red")
+        self.textResult.tag_config("success", foreground="#008000")
+        
+        self.textResult.config(state=tk.DISABLED)
+
+        tk.Frame(self.panel, height=2, bd=1, relief=tk.SUNKEN).pack(fill=tk.X, pady=10)
+
+        # --- SECCIÓN 3: GESTIÓN DE RED (CRUD) ---
+        tk.Label(self.panel, text="3. Gestionar Red", font=("Arial", 12, "bold"), fg="navy").pack(anchor=tk.W, pady=(0, 5))
+        
+        # 1. Crear los botones físicos en la interfaz
+        btn_add_city = tk.Button(self.panel, text="➕ Añadir Ciudad")
+        btn_del_city = tk.Button(self.panel, text="🗑️ Eliminar Ciudad")
+        btn_add_flight = tk.Button(self.panel, text="✈️ Añadir Vuelo")
+        btn_mod_flight = tk.Button(self.panel, text="✏️ Modificar Costo")
+        btn_del_flight = tk.Button(self.panel, text="❌ Eliminar Vuelo")
+
+        # 2. Empaquetarlos
+        btn_add_city.pack(fill=tk.X, pady=2)
+        btn_del_city.pack(fill=tk.X, pady=2)
+        btn_add_flight.pack(fill=tk.X, pady=2)
+        btn_mod_flight.pack(fill=tk.X, pady=2)
+        btn_del_flight.pack(fill=tk.X, pady=2)
+
+        # 3. Instanciar CRUDForms pasándole nuestra función OnGraphUpdated
+        self.crud_forms = CRUDForms(self.parent, self.app, self.OnGraphUpdated)
+        
+        # 4. Conectar los botones con las funciones de CRUDForms
+        btn_add_city.config(command=self.crud_forms.OpenAddCity)
+        btn_del_city.config(command=self.crud_forms.OpenDeleteCity)
+        btn_add_flight.config(command=self.crud_forms.OpenAddFlight)
+        btn_mod_flight.config(command=self.crud_forms.OpenModifyFlight)
+        btn_del_flight.config(command=self.crud_forms.OpenDeleteFlight)
+
+    def OnGraphUpdated(self):
+        """
+        Esta función se ejecuta cada vez que el CRUD modifica el grafo.
+        Actualiza las listas desplegables y redibuja el mapa.
+        """
+        # 1. Actualizar los valores de los Combobox con la nueva lista de ciudades
+        options = self.app.GetCitiesList()
+        if hasattr(self, 'originComboBox'):
+            self.originComboBox.config(values=options)
+            self.destinationComboBox.config(values=options)
+            
+            # Limpiar selección actual si la ciudad fue eliminada
+            if self.origin.get() and self.origin.get().split(" - ")[0] not in self.app.graph.cities:
+                self.originComboBox.set("")
+            if self.destination.get() and self.destination.get().split(" - ")[0] not in self.app.graph.cities:
+                self.destinationComboBox.set("")
+
+        # 2. Ordenar al mapa que se redibuje (Pasamos None para limpiar rutas óptimas previas)
+        self.map_viewer.UpdateGraph(None)
 
     def LoadCities(self):
         path = filedialog.askopenfilename(title="Seleccionar Archivo de Ciudades", filetypes=[("Archivos Soportados", "*.csv;*.json;*.xml")])
@@ -73,7 +138,6 @@ class SearchPanel:
             if success:
                 self.citiesLabel.config(text=f"✅ {msj}", fg="green")
                 self.flightsBtn.config(state=tk.NORMAL)
-                # Reseteamos la búsqueda
                 self.originComboBox.set("")
                 self.destinationComboBox.set("")
                 self.originComboBox.config(state=tk.DISABLED)
@@ -114,9 +178,13 @@ class SearchPanel:
             requiresVisa=self.requiresVisa.get(), criteria=self.criteria.get()
         )
 
+        # --- AQUÍ INYECTAMOS EL RESULTADO EN EL CUADRO DE TEXTO ---
+        self.textResult.config(state=tk.NORMAL) # Habilitar para escribir
+        self.textResult.delete("1.0", tk.END)   # Limpiar búsqueda anterior
+
         if path is None:
-            self.labelResult.config(text=f"❌ Error:\n{result}", fg="red")
-            self.map_viewer.UpdateGraph(None) # Limpiamos el mapa en caso de error
+            self.textResult.insert(tk.END, f"❌ Error:\n{result}", "error")
+            self.map_viewer.UpdateGraph(None) # Limpiamos el mapa
         else:
             text = f"✅ ¡Ruta encontrada!\n\n{' ➔ '.join(path)}\n\n"
             if self.criteria.get() == "cost":
@@ -124,5 +192,7 @@ class SearchPanel:
             else:
                 text += f"Número de Vuelos: {result}\n(Escalas: {result - 1})"
             
-            self.labelResult.config(text=text, fg="green")
-            self.map_viewer.UpdateGraph(path) # Trazamos la ruta ganadora
+            self.textResult.insert(tk.END, text, "success")
+            self.map_viewer.UpdateGraph(path) # Trazamos la ruta
+
+        self.textResult.config(state=tk.DISABLED) # Volver a bloquear para lectura
