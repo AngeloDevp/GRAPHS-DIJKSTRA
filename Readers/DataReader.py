@@ -3,11 +3,11 @@ from City import *
 import csv
 import json
 import xml.etree.ElementTree as ET
-from Readers.GeoLocatorCache import GeoLocatorCache
+from Readers.DataReaderCache import DataReaderCache
 
 class DataReader:
     def __init__(self):
-        self.geoLocatorCache = GeoLocatorCache()
+        self.dataReaderCache = DataReaderCache()
     def LoadCities(self, pathFile):
         pass
     def LoadFlights(self, pathFile):

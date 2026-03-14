@@ -11,7 +11,7 @@ class DataReaderJSON(DataReader):
                 for item in data:
                     requiresVisa = True if item['requiresVisa'].strip().lower() == 'si' else False
                     if item['code'] not in cities:
-                        coords = self.geoLocatorCache.get_coordinates(item['code'], item['name'])
+                        coords = self.dataReaderCache.GetCoordinates(item['code'], item['name'])
                         cities[item['code']] = City(item['code'], item['name'], requiresVisa, coords)
             return cities
 

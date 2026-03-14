@@ -8,17 +8,9 @@ class MetroTravelGUI:
         self.root = root
         self.app = app
         
-        # 1. Aplicar configuraciones globales desde StyleConfig
         self.root.title(StyleConfig.WINDOW_TITLE)
         self.root.geometry(StyleConfig.WINDOW_SIZE)
-        
-        # (Opcional) Configurar un color de fondo base
         self.root.configure(bg=StyleConfig.BG_PANEL_LEFT)
         
-        # 2. Instanciar los Componentes Visuales
-        # Primero creamos el visor del mapa (Panel Derecho)
-        self.map_viewer = MapViewer(self.root, self.app)
-        
-        # Luego creamos el panel de controles (Panel Izquierdo)
-        # Le inyectamos la referencia del 'map_viewer' para que puedan comunicarse
-        self.search_panel = SearchPanel(self.root, self.app, self.map_viewer)
+        self.mapViewer = MapViewer(self.root, self.app)        
+        self.searchPanel = SearchPanel(self.root, self.app, self.mapViewer)

@@ -14,7 +14,7 @@ class DataReaderXML(DataReader):
             name = item.find('name').text
             requiresVisa = True if item.find('requiresVisa').text.strip().lower() == 'si' else False
             if code not in cities:
-                coords = self.geoLocatorCache.get_coordinates(code, name)
+                coords = self.dataReaderCache.GetCoordinates(code, name)
                 cities[code] = City(code, name, requiresVisa, coords)
             
         return cities

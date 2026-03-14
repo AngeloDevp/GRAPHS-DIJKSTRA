@@ -6,7 +6,6 @@ class PanZoomController:
         self.setup_connections()
 
     def setup_connections(self):
-        # Conectamos todos los eventos del ratón a los métodos de esta clase
         self.fig.canvas.mpl_connect('scroll_event', self.zoom)
         self.fig.canvas.mpl_connect('button_press_event', self.on_press)
         self.fig.canvas.mpl_connect('motion_notify_event', self.on_motion)

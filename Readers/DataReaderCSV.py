@@ -11,7 +11,7 @@ class DataReaderCSV(DataReader):
             for fila in reader:
                 requiresVisa = True if fila['requiresVisa'].strip().lower() == 'si' else False
                 if fila['code'] not in cities:
-                    coords = self.geoLocatorCache.get_coordinates(fila['code'], fila['name'])
+                    coords = self.dataReaderCache.GetCoordinates(fila['code'], fila['name'])
                     cities[fila['code']] = City(fila['code'], fila['name'], requiresVisa, coords)
         return cities
 
