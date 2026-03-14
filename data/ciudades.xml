@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cities>
+    <city>
+        <code>CCS</code>
+        <name>Caracas</name>
+        <requiresVisa>no</requiresVisa>
+    </city>
+    <city>
+        <code>AUA</code>
+        <name>Aruba</name>
+        <requiresVisa>si</requiresVisa>
+    </city>
+    <city>
+        <code>BON</code>
+        <name>Bonaire</name>
+        <requiresVisa>si</requiresVisa>
+    </city>
+    <city>
+        <code>CUR</code>
+        <name>Curazao</name>
+        <requiresVisa>si</requiresVisa>
+    </city>
+    <city>
+        <code>SXM</code>
+        <name>San Martín</name>
+        <requiresVisa>si</requiresVisa>
+    </city>
+    <city>
+        <code>SDQ</code>
+        <name>Santo Domingo</name>
+        <requiresVisa>si</requiresVisa>
+    </city>
+    <city>
+        <code>SBH</code>
+        <name>San Bartolomé</name>
+        <requiresVisa>no</requiresVisa>
+    </city>
+    <city>
+        <code>POS</code>
+        <name>Puerto España (Trinidad)</name>
+        <requiresVisa>no</requiresVisa>
+    </city>
+    <city>
+        <code>BGI</code>
+        <name>Barbados</name>
+        <requiresVisa>no</requiresVisa>
+    </city>
+    <city>
+        <code>FDF</code>
+        <name>Fort de France (Martinica)</name>
+        <requiresVisa>no</requiresVisa>
+    </city>
+    <city>
+        <code>PTP</code>
+        <name>Point a Pitre (Guadalupe)</name>
+        <requiresVisa>no</requiresVisa>
+    </city>
+    <city>
+        <code>PAP</code>
+        <name>Port Au Prince (Haiti)</name>
+        <requiresVisa>no</requiresVisa>
+    </city>
+</cities>

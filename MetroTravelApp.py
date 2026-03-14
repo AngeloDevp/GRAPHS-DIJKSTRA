@@ -1,64 +1,59 @@
-from GestorArchivos import *
-from Grafo import *
-from EstrategiaRuta import *
-from EstrategiaMenorCosto import *
-from EstrategiaMenorEscalas import *
-from Visualizador import *
-from OptimizadorRutas import *
+from FileManager import *
+from Graph import *
+from Strategies.RouteStrategy import *
+from Strategies.RouteStrategyLCS import *
+from Strategies.RouteStrategyLSS import *
+from GUI.GraphViewer import *
+from Strategies.RouteOptimizer import *
 
 class MetroTravelApp:
-    """Controlador Principal de la Aplicación"""
     def __init__(self):
-        self.grafo = Grafo()
-        self.gestor_archivos = GestorArchivos()
-        self.optimizador = OptimizadorRutas()
-        self.visualizador = Visualizador()
-        self.ciudades_cargadas = False
-        self.vuelos_cargados = False
+        self.graph = Graph()
+        self.fileManager = FileManager()
+        self.routeOptimizer = RouteOptimizer()
+        self.graphViewer = GraphViewer()
+        self.loadedCities = False
+        self.loadedFlights = False
 
-    def procesar_archivo_ciudades(self, ruta_archivo):
+    def ProcessCities(self, pathFile):
         try:
-            lector = self.gestor_archivos.obtener_lector(ruta_archivo)
-            print(f"FLAG 2: Lector obtenido: {type(lector).__name__}")
-            dict_ciudades = lector.cargar_ciudades(ruta_archivo)
-            self.grafo.ciudades.clear()
-            self.grafo.adyacencia.clear()
-            for ciudad in dict_ciudades.values():
-                self.grafo.agregar_ciudad(ciudad)
-            self.ciudades_cargadas = True
-            print(f"FLAG 3: Ciudades cargadas: {list(self.grafo.ciudades.keys())}")
+            reader = self.fileManager.GetReader(pathFile)
+            dictCities = reader.LoadCities(pathFile)
+            self.graph.cities.clear()
+            self.graph.adjacency.clear()
+            for city in dictCities.values():
+                self.graph.AddCity(city)
+            self.loadedCities = True
 
-            self.vuelos_cargados = False # Si recarga ciudades, debe recargar vuelos
-            return True, f"{len(dict_ciudades)} ciudades cargadas."
+            self.loadedFlights = False # Si recarga cities, debe recargar vuelos
+            return True, f"{len(dictCities)} Ciudades cargadas."
         except Exception as e:
             return False, str(e)
 
-    def procesar_archivo_vuelos(self, ruta_archivo):
+    def ProcessFlights(self, pathFile):
         try:
-            lector = self.gestor_archivos.obtener_lector(ruta_archivo)
-            lista_vuelos = lector.cargar_vuelos(ruta_archivo)
-            for origen, destino, precio in lista_vuelos:
-                self.grafo.agregar_vuelo(origen, destino, precio)
-            self.vuelos_cargados = True
-            print(f"FLAG 4: Vuelos cargados: {lista_vuelos}, RUTA: {ruta_archivo}")
+            reader = self.fileManager.GetReader(pathFile)
+            flightsList = reader.LoadFlights(pathFile)
+            for origin, destination, price in flightsList:
+                self.graph.AddFlight(origin, destination, price)
+            self.loadedFlights = True
 
-            return True, f"{len(lista_vuelos)} vuelos cargados."
+            return True, f"{len(flightsList)} vuelos cargados."
         except Exception as e:
             return False, str(e)
 
-    def obtener_lista_ciudades(self):
-        opciones = [f"{c.codigo} - {c.nombre}" for c in self.grafo.ciudades.values()]
-        opciones.sort()
-        return opciones
+    def GetCitiesList(self):
+        options = [f"{c.code} - {c.name}" for c in self.graph.cities.values()]
+        options.sort()
+        return options
 
-    def procesar_busqueda(self, origen, destino, tiene_visa, criterio):
-        # Asignar la Estrategia dinámicamente según el criterio del usuario
-        if criterio == "costo":
-            self.optimizador.set_estrategia(EstrategiaMenorCosto())
-        elif criterio == "escalas":
-            self.optimizador.set_estrategia(EstrategiaMenorEscalas())
+    def ProcessSearch(self, origin, destination, requiresVisa, criteria):
+        if criteria == "cost":
+            self.routeOptimizer.SetStrategy(RouteStrategyLCS())
+        elif criteria == "scale":
+            self.routeOptimizer.SetStrategy(RouteStrategyLSS())
             
-        return self.optimizador.ejecutar_optimizacion(self.grafo, origen, destino, tiene_visa)
+        return self.routeOptimizer.ExecuteOptimization(self.graph, origin, destination, requiresVisa)
 
-    def obtener_figura_mapa(self, ruta=None):
-        return self.visualizador.generar_figura(self.grafo, ruta)
+    def GetGraphMap(self, path=None):
+        return self.graphViewer.CreateGraph(self.graph, self.graph.cities, path)
